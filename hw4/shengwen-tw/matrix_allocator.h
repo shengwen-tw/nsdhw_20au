@@ -20,6 +20,11 @@ public:
     MatrixDataAllocator() = default;
     ~MatrixDataAllocator() = default;
 
+    template<class U>
+    bool operator!= (const MatrixDataAllocator<U> &rhs) {
+        return false;
+    }
+
     T* allocate(size_t n)
     {
         return static_cast<T*>(operator new(sizeof(T) * n));
