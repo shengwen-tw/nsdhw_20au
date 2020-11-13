@@ -19,6 +19,8 @@ double time(void)
 
 int main(void)
 {
+    //std::vector<double, MatrixDataAllocator<double>> v;
+
 	Matrix mat1(N, N);
 	random_matrix(mat1, 1000);
 

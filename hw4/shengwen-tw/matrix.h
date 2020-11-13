@@ -4,6 +4,7 @@
 #include <iostream>
 #include <string>
 #include <vector>
+#include "matrix_allocator.h"
 
 #define N 1024
 #define BLOCK_SIZE 64
@@ -90,6 +91,7 @@ private:
 	int n_row;
 	int n_column;
 
+    //std::vector<int, MatrixDataAllocator<int>> v;
     std::vector<double> data;
 };
 
