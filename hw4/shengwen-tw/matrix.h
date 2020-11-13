@@ -10,12 +10,18 @@
 #define BLOCK_SIZE 64
 #define PADDING_ZEROS 64 //in case block size doesn't fit
 
+using namespace std;
+
+extern MatrixDataAllocator<double> matrix_memory_manager;
+
 class Matrix {
 public:
 	Matrix();
-	Matrix(int _row, int _column) {
+	Matrix(int _row, int _column): data(matrix_memory_manager) {
 		_row += PADDING_ZEROS;
 		_column += PADDING_ZEROS;
+
+        cout << "address of allocator = " << &matrix_memory_manager << endl;
 
         this->data.resize(_row * _column);
 
@@ -87,14 +93,21 @@ public:
         return &data[0];
 	}
 
+    const MatrixDataAllocator<double>& get_mem_alloc() const {
+        return mem_alloc;
+    }
+
 private:
 	int n_row;
 	int n_column;
 
-    //std::vector<int, MatrixDataAllocator<int>> v;
-    std::vector<double> data;
+    MatrixDataAllocator<double> mem_alloc;
+    std::vector<double, MatrixDataAllocator<double>> data;
 };
 
+size_t bytes();
+size_t allocated();
+size_t deallocated();
 void random_matrix(Matrix &mat, double max_val);
 Matrix multiply_naive(Matrix &mat1, Matrix &mat2);
 Matrix  multiply_tile(Matrix &mat1, Matrix &mat2, int tile_size);

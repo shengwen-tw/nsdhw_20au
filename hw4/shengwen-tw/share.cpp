@@ -13,6 +13,11 @@ PYBIND11_MODULE(_matrix, m) {
 	m.def("multiply_naive", &multiply_naive, "");
 	m.def("multiply_tile", &multiply_tile, "");
 	m.def("multiply_mkl", &multiply_mkl, "");
+
+    m.def("bytes", &bytes, "");
+    m.def("allocated", &allocated, "");
+    m.def("deallocated", &deallocated, "");
+
 	m.def("random_matrix", &random_matrix, "");
 	py::class_<Matrix>(m, "Matrix", py::buffer_protocol())
 	.def(py::init<int, int>())

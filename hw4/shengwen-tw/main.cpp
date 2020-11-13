@@ -67,6 +67,9 @@ int main(void)
 		fprintf(stderr, "-> failed, something is wrong!\n");
 	}
 
+    /* test matrix allocator */
+    cout << "address of allocator = " << &(m_naive.get_mem_alloc()) << endl;
+
 #if 0
 	print_matrix("mat1", mat1);
 	print_matrix("mat2", mat2);

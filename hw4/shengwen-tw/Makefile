@@ -16,7 +16,7 @@ LDFLAGS=-lm
 
 CFLAGS+=-I$(MKL_PATH)/include
 
-PYBIND_CFLAGS=-shared -std=c++11 -fPIC \
+PYBIND_CFLAGS=-shared -std=c++17 -fPIC \
 	`python3 -m pybind11 --includes`
 PYBIND_LDFLAGS=`python3-config --ldflags`
 
