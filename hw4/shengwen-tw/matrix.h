@@ -1,7 +1,9 @@
 #ifndef __MATRIX_H__
 #define __MATRIX_H__
 
+#include <iostream>
 #include <string>
+#include <vector>
 
 #define N 1024
 #define BLOCK_SIZE 64
@@ -14,7 +16,8 @@ public:
 		_row += PADDING_ZEROS;
 		_column += PADDING_ZEROS;
 
-		this->data = new double[_row * _column]();
+        this->data.resize(_row * _column);
+
 		this->n_row = _row;
 		this->n_column = _column;
 	}
@@ -23,7 +26,7 @@ public:
 	}
 
 	void clean(void) {
-		if(data != nullptr) delete[] data;
+        data.clear();
 	}
 
 	int row(void) {
@@ -40,7 +43,7 @@ public:
 
 		for(int r = 0; r < n_row; r++) {
 			for(int c = 0; c < n_column; c++) {
-				if(fabs(rhs.data[r * n_column + c] - data[r * n_column + c]) > 0.0001) {
+				if(fabs(rhs.data.at(r * n_column + c) - data.at(r * n_column + c)) > 0.0001) {
 					return false;
 				}
 			}
@@ -54,7 +57,7 @@ public:
 
 		for(int r = 0; r < n_row; r++) {
 			for(int c = 0; c < n_column; c++) {
-				if(fabs(rhs.data[r * n_column + c] - data[r * n_column + c]) > 0.0001) {
+				if(fabs(rhs.data.at(r * n_column + c) - data.at(r * n_column + c)) > 0.0001) {
 					return true;
 				}
 			}
@@ -64,29 +67,30 @@ public:
 	}
 
 	double & operator() (int r, int c) {
-		return data[r * this->n_column + c];
+		return data.at(r * this->n_column + c);
 	}
 
 	const double & operator() (int r, int c) const {
-		return data[r * this->n_column + c];
+		return data.at(r * this->n_column + c);
 	}
 
 	double at(int r, int c) {
-		return data[r * n_column + c];
+		return data.at(r * n_column + c);
 	}
 
 	void set(int r, int c, double val) {
-		data[r * n_column + c] = val;
+		data.at(r * n_column + c) = val;
 	}
 
 	double *raw_data(void) {
-		return data;
+        return &data[0];
 	}
 
 private:
 	int n_row;
 	int n_column;
-	double *data;
+
+    std::vector<double> data;
 };
 
 void random_matrix(Matrix &mat, double max_val);
