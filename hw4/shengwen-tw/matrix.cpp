@@ -21,7 +21,6 @@ std::size_t deallocated() {
     return matrix_memory_manager.deallocated();
 }
 
-
 Matrix multiply_naive(Matrix &mat1, Matrix &mat2)
 {
 	Matrix mat_result(mat1.row(), mat2.column());
@@ -63,9 +62,9 @@ int matrix_compare(Matrix &mat1, Matrix &mat2)
 	int difference = 0;
 	double f;
 	
-	for(int r = 0; r < mat1.row() - PADDING_ZEROS; r++) {
-		for(int c = 0; c < mat1.column() - PADDING_ZEROS; c++) {
-			if((f = fabs(mat1.at(r, c) - mat2.at(r, c))) > 0.0001) {
+	for(int r = 0; r < mat1.row(); r++) {
+		for(int c = 0; c < mat1.column(); c++) {
+			if((f = fabs(mat1(r, c) - mat2(r, c))) > 0.0001) {
 				difference++;
 				//cout << f << " ("<< r << "," << c << ")" << endl;
 			}
@@ -82,17 +81,17 @@ Matrix multiply_mkl(Matrix &mat1, Matrix &mat2)
         cblas_dgemm(CblasRowMajor,
 		    CblasNoTrans,
 		    CblasNoTrans,
-		    mat1.row() + PADDING_ZEROS,
-                    mat2.column() + PADDING_ZEROS,
-		    mat1.column() + PADDING_ZEROS,
+		    mat1.row(),
+            mat2.column(),
+		    mat1.column(),
 		    1,
 		    mat1.raw_data(),
-		    mat1.column() + PADDING_ZEROS,
-                    mat2.raw_data(),
-		    mat_result.column() + PADDING_ZEROS,
+		    mat1.column(),
+            mat2.raw_data(),
+		    mat_result.column(),
 		    0,
 		    mat_result.raw_data(),
-                    mat_result.column() + PADDING_ZEROS);
+            mat_result.column());
 
 	return mat_result;
 }
@@ -116,7 +115,7 @@ void print_matrix(const char *prompt, Matrix &mat)
 	cout << prompt << " (" << mat.row()  << "x" << mat.column() << "):\n";
 	for(int r = 0; r < mat.row(); r++) {
 		for(int c = 0; c < mat.column(); c++) {
-			cout << mat.at(r, c) << "  ";
+			cout << mat(r, c) << "  ";
 		}
 		cout << "\n";
 	}

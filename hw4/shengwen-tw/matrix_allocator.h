@@ -56,9 +56,9 @@ public:
         byte_counter.data->n_allocated += n_byte;
 
         //cout << "[debug] address of allocator = " << this << endl;
-        //cout << "[debug] allocated bytes = " << n_byte << endl;
+        cout << "[debug] allocated bytes = " << n_byte << endl;
 
-        return static_cast<T*>(operator new(n_byte));
+        return static_cast<T*>(malloc(n_byte));
     }
 
     T* allocate(size_t n, const T * hint)
@@ -73,9 +73,9 @@ public:
 
         byte_counter.data->n_deallocated += n_byte;
 
-        //cout << "[debug] deallocated bytes = " << n_byte << endl;
+        cout << "[debug] deallocated bytes = " << n_byte << endl;
 
-        operator delete(p);
+        free(p);
     }
 
     size_t max_size() const

@@ -18,7 +18,6 @@ PYBIND11_MODULE(_matrix, m) {
     m.def("allocated", &allocated, "");
     m.def("deallocated", &deallocated, "");
 
-	m.def("random_matrix", &random_matrix, "");
 	py::class_<Matrix>(m, "Matrix", py::buffer_protocol())
 	.def(py::init<int, int>())
 	.def_property_readonly("nrow", &Matrix::row)
@@ -30,6 +29,4 @@ PYBIND11_MODULE(_matrix, m) {
 	.def("__eq__", [](Matrix &m1, Matrix &m2){return m1 == m2;})
 	.def("__ne__", [](Matrix &m1, Matrix &m2){return m1 != m2;})
 	;
-//	.def("__eq__", &Matrix::operator==)
-//	.def("__ne__", &Matrix::operator!=);
 }

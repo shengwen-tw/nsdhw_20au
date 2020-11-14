@@ -3,12 +3,12 @@ SHARED_OBJ=_matrix.so
 CC=g++
 
 #on my pc
-MKL_PATH=/opt/intel/mkl
-MKL_LDFLAGS=-L$(MKL_PATH)/lib/intel64 -lmkl_rt
+#MKL_PATH=/opt/intel/mkl
+#MKL_LDFLAGS=-L$(MKL_PATH)/lib/intel64 -lmkl_rt
 
 #on ec2
-#MKL_PATH=$(HOME)/opt/conda
-#MKL_LDFLAGS=-L$(MKL_PATH)/lib -lmkl_rt
+MKL_PATH=$(HOME)/opt/conda
+MKL_LDFLAGS=-L$(MKL_PATH)/lib -lmkl_rt
 
 CFLAGS=-O3 -Wall -g
 
@@ -20,15 +20,14 @@ PYBIND_CFLAGS=-shared -std=c++17 -fPIC \
 	`python3 -m pybind11 --includes`
 PYBIND_LDFLAGS=`python3-config --ldflags`
 
-SRC=main.cpp \
-	matrix.cpp
+SRC=matrix.cpp
 
 PYBIND_SRC=share.cpp
 
 OBJS=$(SRC:.cpp=.o)
 DEPEND=$(SRC:.cpp=.d)
 
-all: $(EXECUTABLE) $(SHARED_OBJ)
+all: $(SHARED_OBJ)
 
 $(EXECUTABLE): $(OBJS)
 	@echo "LD" $@

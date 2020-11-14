@@ -7,41 +7,60 @@
 #include "matrix_allocator.h"
 
 #define N 1024
-#define BLOCK_SIZE 64
-#define PADDING_ZEROS 64 //in case block size doesn't fit
+#define BLOCK_SIZE 10
 
 using namespace std;
 
 extern MatrixDataAllocator<double> matrix_memory_manager;
 
 class Matrix {
+
 public:
-	Matrix();
-	Matrix(int _row, int _column): data(matrix_memory_manager) {
-		_row += PADDING_ZEROS;
-		_column += PADDING_ZEROS;
+    Matrix(int row, int column)
+        : n_row(row),
+          n_column(column),
+          data(row * column, 0, matrix_memory_manager)
+    {
+        std::fill(data.begin(), data.end(), 0);
+    }
 
-        //cout << "address of allocator = " << &matrix_memory_manager << endl;
+    Matrix(Matrix const & other)
+        : n_row(other.n_row),
+          n_column(other.n_column),
+          data(other.n_row * other.n_column, 0, matrix_memory_manager)
+    {
+        std::copy(other.data.begin(), other.data.end(), data.begin());
+    }
 
-        this->data.resize(_row * _column);
+    Matrix(Matrix && other)
+        : n_row(other.n_row),
+          n_column(other.n_column),
+          data(matrix_memory_manager)
+    {
+        other.data.swap(data);
+    }
 
-		this->n_row = _row;
-		this->n_column = _column;
-	}
+    Matrix(std::vector<std::vector<double>> const & other)
+        : n_row(other.size()), n_column(other[0].size())
+    {
+        for(const auto &other_data: other) {
+            data.insert(data.end(), other_data.begin(), other_data.end());
+        }
+    }
 
-	~Matrix() {
-	}
+    ~Matrix() {
+    }
 
-	void clean(void) {
+    void clean(void) {
         data.clear();
 	}
 
 	int row(void) {
-		return this->n_row - PADDING_ZEROS;
+		return this->n_row;
 	}
 
 	int column(void) {
-		return this->n_column - PADDING_ZEROS;
+		return this->n_column;
 	}
 
 	bool operator== (const Matrix &rhs) {
@@ -73,35 +92,21 @@ public:
 		return false;
 	}
 
-	double & operator() (int r, int c) {
-		return data.at(r * this->n_column + c);
-	}
+    double operator() (int row, int col) const {
+        return data.at(row * n_column + col);
+    }
 
-	const double & operator() (int r, int c) const {
-		return data.at(r * this->n_column + c);
-	}
-
-	double at(int r, int c) {
-		return data.at(r * n_column + c);
-	}
-
-	void set(int r, int c, double val) {
-		data.at(r * n_column + c) = val;
-	}
+    double &operator() (int row, int col) {
+        return data.at(row * n_column + col);
+    }
 
 	double *raw_data(void) {
         return &data[0];
 	}
 
-    const MatrixDataAllocator<double>& get_mem_alloc() const {
-        return mem_alloc;
-    }
-
 private:
-	int n_row;
-	int n_column;
-
-    MatrixDataAllocator<double> mem_alloc;
+    int n_row;
+    int n_column;
     std::vector<double, MatrixDataAllocator<double>> data;
 };
 
