@@ -21,7 +21,7 @@ public:
 		_row += PADDING_ZEROS;
 		_column += PADDING_ZEROS;
 
-        cout << "address of allocator = " << &matrix_memory_manager << endl;
+        //cout << "address of allocator = " << &matrix_memory_manager << endl;
 
         this->data.resize(_row * _column);
 

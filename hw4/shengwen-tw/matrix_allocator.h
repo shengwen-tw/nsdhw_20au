@@ -9,6 +9,26 @@
 
 using namespace std;
 
+struct ByteCounterData {
+    std::atomic_size_t n_allocated;
+    std::atomic_size_t n_deallocated;
+};
+
+class ByteCounter {
+public:
+    ByteCounterData *data;
+
+    ByteCounter(): data(0) {
+        if(data == nullptr) {
+            data = new ByteCounterData();
+            data->n_allocated = 0;
+            data->n_deallocated = 0;
+        }
+    }
+
+    ~ByteCounter() {}
+};
+
 template <class T>
 class MatrixDataAllocator
 {
@@ -33,10 +53,10 @@ public:
     {
         size_t n_byte = sizeof(T) * n;
 
-        n_allocated += n_byte;
+        byte_counter.data->n_allocated += n_byte;
 
-        cout << "[debug] address of allocator = " << this << endl;
-        cout << "[debug] allocated bytes = " << n_byte << endl;
+        //cout << "[debug] address of allocator = " << this << endl;
+        //cout << "[debug] allocated bytes = " << n_byte << endl;
 
         return static_cast<T*>(operator new(n_byte));
     }
@@ -51,9 +71,9 @@ public:
     {
         size_t n_byte = sizeof(T) * n;
 
-        n_deallocated += n_byte;
+        byte_counter.data->n_deallocated += n_byte;
 
-        cout << "[debug] deallocated bytes = " << n_byte << endl;
+        //cout << "[debug] deallocated bytes = " << n_byte << endl;
 
         operator delete(p);
     }
@@ -63,19 +83,19 @@ public:
         return std::numeric_limits<size_t>::max();
     }
 
-    std::size_t bytes() const {
-        return n_allocated - n_deallocated;
+    std::size_t bytes() {
+        return byte_counter.data->n_allocated - byte_counter.data->n_deallocated;
     }
 
-    std::size_t allocated() const {
-        return n_allocated;
+    std::size_t allocated() {
+        return byte_counter.data->n_allocated;
     }
 
-    std::size_t deallocated() const {
-        return n_deallocated;
+    std::size_t deallocated() {
+        return byte_counter.data->n_deallocated;
     }
+
 
 private:
-    std::size_t n_allocated = 0;
-    std::size_t n_deallocated = 0;
+    ByteCounter byte_counter;
 };

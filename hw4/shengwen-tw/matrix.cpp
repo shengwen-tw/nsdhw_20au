@@ -9,6 +9,19 @@ using namespace std;
 
 MatrixDataAllocator<double> matrix_memory_manager;
 
+std::size_t bytes() {
+    return matrix_memory_manager.bytes();
+}
+
+std::size_t allocated() {
+    return matrix_memory_manager.allocated();
+}
+
+std::size_t deallocated() {
+    return matrix_memory_manager.deallocated();
+}
+
+
 Matrix multiply_naive(Matrix &mat1, Matrix &mat2)
 {
 	Matrix mat_result(mat1.row(), mat2.column());
@@ -108,16 +121,4 @@ void print_matrix(const char *prompt, Matrix &mat)
 		cout << "\n";
 	}
 	cout << "\n";
-}
-
-size_t bytes() {
-    return matrix_memory_manager.bytes();
-}
-
-size_t allocated() {
-    return matrix_memory_manager.allocated();
-}
-
-size_t deallocated() {
-    return matrix_memory_manager.deallocated();
 }

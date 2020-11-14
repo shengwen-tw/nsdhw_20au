@@ -7,6 +7,8 @@
 
 using namespace std;
 
+extern MatrixDataAllocator<double> matrix_memory_manager;
+
 double time(void)
 {
         static int sec = -1;
@@ -68,7 +70,10 @@ int main(void)
 	}
 
     /* test matrix allocator */
-    cout << "address of allocator = " << &(m_naive.get_mem_alloc()) << endl;
+    cout << "======================" << endl << "matrix memory allocatation analysis" << endl;
+    cout << "matrix total bytes = " << matrix_memory_manager.bytes() << endl;
+    cout << "matrix total allocated = " << matrix_memory_manager.allocated() << endl;
+    cout << "matrix total deallocated = " << matrix_memory_manager.deallocated() << endl;
 
 #if 0
 	print_matrix("mat1", mat1);
